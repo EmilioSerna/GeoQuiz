@@ -20,12 +20,12 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
 
     private Question[] mQuestionBank = new Question[] {
-            new Question(R.string.question_australia, true),
-            new Question(R.string.question_oceans, true),
-            new Question(R.string.question_mideast, false),
-            new Question(R.string.question_africa, false),
-            new Question(R.string.question_americas, true),
-            new Question(R.string.question_asia, true),
+            new Question(R.string.question_australia, true, true),
+            new Question(R.string.question_oceans, true, true),
+            new Question(R.string.question_mideast, false, true),
+            new Question(R.string.question_africa, false, true),
+            new Question(R.string.question_americas, true, true),
+            new Question(R.string.question_asia, true, true),
     };
 
     @Override
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        enableButton();
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -94,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
             messageResId = R.string.incorrect_toast;
         }
 
+        mQuestionBank[mCurrentIndex].setState(false);
+
+        enableButton();
+
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void enableButton() {
+        mTrueButton.setEnabled(mQuestionBank[mCurrentIndex].isState());
+        mFalseButton.setEnabled(mQuestionBank[mCurrentIndex].isState());
     }
 }
