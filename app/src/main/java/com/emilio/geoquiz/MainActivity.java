@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
 
     private int mCurrentIndex = 0;
+    private int mCurrentQuestion = 0;
+    private int correctAnswers = 0;
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_australia, true, true),
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
 
+        mQuestionTextView.setText(mQuestionBank[mCurrentIndex].getTextResId());
+
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mQuestionBank[mCurrentIndex].setState(false);
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mCurrentQuestion++;
                 updateQuestion();
             }
         });
@@ -82,6 +88,17 @@ public class MainActivity extends AppCompatActivity {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
         enableButton();
+
+        double percentageAdvance = mCurrentQuestion * 100 / mQuestionBank.length;
+        if (percentageAdvance < 100) {
+            String advance = Double.valueOf(percentageAdvance).intValue() + "% "+ getResources().getString(R.string.advance);
+            Toast.makeText(this, advance, Toast.LENGTH_SHORT).show();
+        } else {
+            double grade = correctAnswers * 100 / mQuestionBank.length;
+            String finalGrade = getResources().getString(R.string.grade) + " " + String.valueOf(grade) + "%";
+            Toast.makeText(this, finalGrade, Toast.LENGTH_SHORT).show();
+            mNextButton.setEnabled(false);
+        }
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -91,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
+            correctAnswers++;
         } else {
             messageResId = R.string.incorrect_toast;
         }
