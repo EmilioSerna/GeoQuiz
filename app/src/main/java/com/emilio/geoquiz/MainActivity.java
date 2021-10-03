@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private int mCurrentQuestion = 0;
-    private int correctAnswers = 0;
+    private int mCorrectAnswers = 0;
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_australia, true, true),
@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_americas, true, true),
             new Question(R.string.question_asia, true, true),
     };
+
+    private boolean[] mQuestionAnswer = new boolean[mQuestionBank.length];
+    private boolean[] mQuestionState = new boolean[mQuestionBank.length];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,16 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        for (int i=0; i < mQuestionBank.length; i++) {
+            mQuestionAnswer[i] = mQuestionBank[i].isAnswerTrue();
+            mQuestionState[i] = mQuestionBank[i].isState();
+        }
+
         outState.putInt("mCurrentIndex", mCurrentIndex);
+        outState.putInt("mCurrentQuestion", mCurrentQuestion);
+        outState.putInt("mCorrectAnswers", mCorrectAnswers);
+        outState.putBooleanArray("mQuestionAnswer", mQuestionAnswer);
+        outState.putBooleanArray("mQuestionState", mQuestionState);
     }
 
     @Override
@@ -81,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
 
         mCurrentIndex = savedInstanceState.getInt("mCurrentIndex");
+        mCurrentQuestion = savedInstanceState.getInt("mCurrentQuestion");
+        mCorrectAnswers = savedInstanceState.getInt("mCorrectAnswers");
+        mQuestionAnswer = savedInstanceState.getBooleanArray("mQuestionAnswer");
+        mQuestionState = savedInstanceState.getBooleanArray("mQuestionState");
+
+        for (int i=0; i < mQuestionBank.length; i++) {
+            mQuestionBank[i].setAnswerTrue(mQuestionAnswer[i]);
+            mQuestionBank[i].setState(mQuestionState[i]);
+        }
+
         updateQuestion();
     }
 
@@ -94,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             String advance = Double.valueOf(percentageAdvance).intValue() + "% "+ getResources().getString(R.string.advance);
             Toast.makeText(this, advance, Toast.LENGTH_SHORT).show();
         } else {
-            double grade = correctAnswers * 100 / mQuestionBank.length;
+            double grade = mCorrectAnswers * 100 / mQuestionBank.length;
             String finalGrade = getResources().getString(R.string.grade) + " " + String.valueOf(grade) + "%";
             Toast.makeText(this, finalGrade, Toast.LENGTH_SHORT).show();
             mNextButton.setEnabled(false);
@@ -108,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
-            correctAnswers++;
+            mCorrectAnswers++;
         } else {
             messageResId = R.string.incorrect_toast;
         }
