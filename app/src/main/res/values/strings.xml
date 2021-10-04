@@ -6,6 +6,10 @@
     <string name="question_africa">The source of the Nile River is in Egypt.</string>
     <string name="question_americas">The Amazon River is the longest river in the Americas.</string>
     <string name="question_asia">Lake Baikal is the world\'s oldest and deepest freshwater lake.</string>
+    <string name="question_mexico">The capital of Mexico is Mexico City</string>
+    <string name="question_peru">The capital of Peru is Lima</string>
+    <string name="question_brazil">Brazil it\'s in Europe</string>
+    <string name="question_portugal">Portugal it\'s in America</string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="next_button">Next</string>

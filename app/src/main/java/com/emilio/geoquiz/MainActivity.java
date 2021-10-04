@@ -22,12 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private int mCorrectAnswers = 0;
 
     private Question[] mQuestionBank = new Question[] {
-            new Question(R.string.question_australia, true, true),
-            new Question(R.string.question_oceans, true, true),
-            new Question(R.string.question_mideast, false, true),
-            new Question(R.string.question_africa, false, true),
-            new Question(R.string.question_americas, true, true),
-            new Question(R.string.question_asia, true, true),
+            new Question(R.string.question_australia, true),
+            new Question(R.string.question_oceans, true),
+            new Question(R.string.question_mideast, false),
+            new Question(R.string.question_africa, false),
+            new Question(R.string.question_americas, true),
+            new Question(R.string.question_asia, true),
+            new Question(R.string.question_mexico, true),
+            new Question(R.string.question_peru, true),
+            new Question(R.string.question_brazil, false),
+            new Question(R.string.question_portugal, false),
     };
 
     private boolean[] mQuestionAnswer = new boolean[mQuestionBank.length];
@@ -109,18 +113,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
-        enableButton();
 
-        double percentageAdvance = mCurrentQuestion * 100 / mQuestionBank.length;
-        if (percentageAdvance < 100) {
-            String advance = Double.valueOf(percentageAdvance).intValue() + "% "+ getResources().getString(R.string.advance);
-            Toast.makeText(this, advance, Toast.LENGTH_SHORT).show();
-        } else {
-            double grade = mCorrectAnswers * 100 / mQuestionBank.length;
-            String finalGrade = getResources().getString(R.string.grade) + " " + String.valueOf(grade) + "%";
-            Toast.makeText(this, finalGrade, Toast.LENGTH_SHORT).show();
-            mNextButton.setEnabled(false);
-        }
+        enableButton();
+        percentageCompleted();
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -145,5 +140,22 @@ public class MainActivity extends AppCompatActivity {
     private void enableButton() {
         mTrueButton.setEnabled(mQuestionBank[mCurrentIndex].isState());
         mFalseButton.setEnabled(mQuestionBank[mCurrentIndex].isState());
+    }
+
+    private void percentageCompleted() {
+        double percentageAdvance = mCurrentQuestion * 100 / mQuestionBank.length;
+        if (percentageAdvance < 100) {
+            String advance = Double.valueOf(percentageAdvance).intValue() + "% " + getResources().getString(R.string.advance);
+            Toast.makeText(this, advance, Toast.LENGTH_SHORT).show();
+        } else {
+            grade();
+            mNextButton.setEnabled(false);
+        }
+    }
+
+    private void grade() {
+        double grade = mCorrectAnswers * 100 / mQuestionBank.length;
+        String finalGrade = getResources().getString(R.string.grade) + " " + String.valueOf(grade) + "%";
+        Toast.makeText(this, finalGrade, Toast.LENGTH_SHORT).show();
     }
 }

@@ -5,10 +5,10 @@ public class Question {
     private boolean mAnswerTrue;
     private boolean mState;
 
-    public Question(int textResId, boolean answerTrue, boolean state) {
+    public Question(int textResId, boolean answerTrue) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
-        mState = state;
+        mState = true;
     }
 
     public int getTextResId() {
